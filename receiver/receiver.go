@@ -1,8 +1,8 @@
 package receiver
 
 import (
-	"github.com/open-falcon/transfer/receiver/rpc"
-	"github.com/open-falcon/transfer/receiver/socket"
+	"github.com/baishancloud/swtfr/receiver/rpc"
+	"github.com/baishancloud/swtfr/receiver/socket"
 )
 
 func Start() {

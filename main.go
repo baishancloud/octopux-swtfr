@@ -3,12 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/open-falcon/transfer/g"
-	"github.com/open-falcon/transfer/http"
-	"github.com/open-falcon/transfer/proc"
-	"github.com/open-falcon/transfer/receiver"
-	"github.com/open-falcon/transfer/sender"
 	"os"
+
+	"github.com/baishancloud/swtfr/g"
+	"github.com/baishancloud/swtfr/http"
+	"github.com/baishancloud/swtfr/proc"
+	"github.com/baishancloud/swtfr/receiver"
+	"github.com/baishancloud/swtfr/sender"
 )
 
 func main() {

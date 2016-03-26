@@ -2,12 +2,13 @@ package sender
 
 import (
 	"fmt"
-	cmodel "github.com/open-falcon/common/model"
-	"github.com/open-falcon/transfer/g"
-	"github.com/open-falcon/transfer/proc"
-	cpool "github.com/open-falcon/transfer/sender/conn_pool"
-	nlist "github.com/toolkits/container/list"
 	"log"
+
+	"github.com/baishancloud/swtfr/g"
+	"github.com/baishancloud/swtfr/proc"
+	cpool "github.com/baishancloud/swtfr/sender/conn_pool"
+	cmodel "github.com/open-falcon/common/model"
+	nlist "github.com/toolkits/container/list"
 )
 
 const (

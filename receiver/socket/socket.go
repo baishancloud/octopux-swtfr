@@ -1,9 +1,10 @@
 package socket
 
 import (
-	"github.com/open-falcon/transfer/g"
 	"log"
 	"net"
+
+	"github.com/baishancloud/swtfr/g"
 )
 
 func StartSocket() {

@@ -1,7 +1,7 @@
 package sender
 
 import (
-	"github.com/open-falcon/transfer/g"
+	"github.com/baishancloud/swtfr/g"
 	nlist "github.com/toolkits/container/list"
 )
 

@@ -2,13 +2,14 @@ package rpc
 
 import (
 	"fmt"
-	cmodel "github.com/open-falcon/common/model"
-	cutils "github.com/open-falcon/common/utils"
-	"github.com/open-falcon/transfer/g"
-	"github.com/open-falcon/transfer/proc"
-	"github.com/open-falcon/transfer/sender"
 	"strconv"
 	"time"
+
+	"github.com/baishancloud/swtfr/g"
+	"github.com/baishancloud/swtfr/proc"
+	"github.com/baishancloud/swtfr/sender"
+	cmodel "github.com/open-falcon/common/model"
+	cutils "github.com/open-falcon/common/utils"
 )
 
 type Transfer int

@@ -1,11 +1,12 @@
 package http
 
 import (
-	cutils "github.com/open-falcon/common/utils"
-	"github.com/open-falcon/transfer/proc"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/baishancloud/swtfr/proc"
+	cutils "github.com/open-falcon/common/utils"
 )
 
 func configProcHttpRoutes() {

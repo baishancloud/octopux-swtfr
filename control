@@ -5,7 +5,8 @@ cd $WORKSPACE
 
 mkdir -p var
 
-module=transfer
+module=swtfr
+
 app=falcon-$module
 conf=cfg.json
 pidfile=var/app.pid

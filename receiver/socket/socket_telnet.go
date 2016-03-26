@@ -3,14 +3,15 @@ package socket
 import (
 	"bufio"
 	"fmt"
-	cmodel "github.com/open-falcon/common/model"
-	"github.com/open-falcon/transfer/g"
-	"github.com/open-falcon/transfer/proc"
-	"github.com/open-falcon/transfer/sender"
 	"net"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/baishancloud/swtfr/g"
+	"github.com/baishancloud/swtfr/proc"
+	"github.com/baishancloud/swtfr/sender"
+	cmodel "github.com/open-falcon/common/model"
 )
 
 func socketTelnetHandle(conn net.Conn) {

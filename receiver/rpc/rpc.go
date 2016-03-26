@@ -1,11 +1,12 @@
 package rpc
 
 import (
-	"github.com/open-falcon/transfer/g"
 	"log"
 	"net"
 	"net/rpc"
 	"net/rpc/jsonrpc"
+
+	"github.com/baishancloud/swtfr/g"
 )
 
 func StartRpc() {

@@ -2,10 +2,11 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/open-falcon/transfer/g"
 	"log"
 	"net/http"
 	_ "net/http/pprof"
+
+	"github.com/baishancloud/swtfr/g"
 )
 
 type Dto struct {

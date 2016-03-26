@@ -1,11 +1,12 @@
 package sender
 
 import (
-	"github.com/open-falcon/transfer/proc"
-	"github.com/toolkits/container/list"
 	"log"
 	"strings"
 	"time"
+
+	"github.com/baishancloud/swtfr/proc"
+	"github.com/toolkits/container/list"
 )
 
 const (

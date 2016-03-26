@@ -2,10 +2,11 @@ package http
 
 import (
 	"fmt"
-	"github.com/open-falcon/transfer/g"
-	"github.com/toolkits/file"
 	"net/http"
 	"strings"
+
+	"github.com/baishancloud/swtfr/g"
+	"github.com/toolkits/file"
 )
 
 func configCommonRoutes() {

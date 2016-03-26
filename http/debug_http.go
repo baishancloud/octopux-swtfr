@@ -2,9 +2,10 @@ package http
 
 import (
 	"fmt"
-	"github.com/open-falcon/transfer/sender"
 	"net/http"
 	"strings"
+
+	"github.com/baishancloud/swtfr/sender"
 )
 
 func configDebugHttpRoutes() {

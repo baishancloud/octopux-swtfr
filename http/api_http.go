@@ -2,9 +2,10 @@ package http
 
 import (
 	"encoding/json"
-	cmodel "github.com/open-falcon/common/model"
-	trpc "github.com/open-falcon/transfer/receiver/rpc"
 	"net/http"
+
+	trpc "github.com/baishancloud/swtfr/receiver/rpc"
+	cmodel "github.com/open-falcon/common/model"
 )
 
 func configApiHttpRoutes() {
