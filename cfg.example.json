@@ -41,14 +41,7 @@
             "influxdb-00": "http://127.0.0.1:8086"
         },
         "remove": {
-            "traffic.lan.in": true,
-            "traffic.lan.out": true,
-            "traffic.wan.in": true,
-            "traffic.wan.out": true,
-            "switch.if.In": true,
-            "switch.if.Out": true,
-            "switch.if.InPkts": true,
-            "switch.if.OutPkts": true
+            "agent.alive": true
         }
     },
     "graph": {
