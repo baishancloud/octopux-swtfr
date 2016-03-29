@@ -6,6 +6,7 @@ import (
 
 	"github.com/baishancloud/swtfr/g"
 	"github.com/baishancloud/swtfr/proc"
+	"github.com/influxdata/influxdb/client/v2"
 	cmodel "github.com/open-falcon/common/model"
 	nsema "github.com/toolkits/concurrent/semaphore"
 	"github.com/toolkits/container/list"
@@ -20,16 +21,28 @@ const (
 func startSendTasks() {
 	cfg := g.Config()
 	// init semaphore
+	influxdbConcurrent := cfg.Influxdb.MaxIdle
 	judgeConcurrent := cfg.Judge.MaxIdle
 	graphConcurrent := cfg.Graph.MaxIdle
+	if influxdbConcurrent < 1 {
+		influxdbConcurrent = 1
+	}
+
 	if judgeConcurrent < 1 {
 		judgeConcurrent = 1
 	}
+
 	if graphConcurrent < 1 {
 		graphConcurrent = 1
 	}
 
 	// init send go-routines
+	if cfg.Influxdb.Enabled {
+		for node, _ := range cfg.Influxdb.Cluster {
+			queue := InfluxdbQueues[node]
+			go forward2InfluxdbTask(queue, node, influxdbConcurrent)
+		}
+	}
 	for node, _ := range cfg.Judge.Cluster {
 		queue := JudgeQueues[node]
 		go forward2JudgeTask(queue, node, judgeConcurrent)
@@ -50,6 +63,7 @@ func startSendTasks() {
 			}
 		}
 	}
+
 }
 
 // Judge定时任务, 将 Judge发送缓存中的数据 通过rpc连接池 发送到Judge
@@ -186,5 +200,49 @@ func forward2GraphMigratingTask(Q *list.SafeListLimited, node string, addr strin
 				proc.SendToGraphMigratingCnt.IncrBy(int64(count))
 			}
 		}(addr, graphItems, count)
+	}
+}
+
+// Tsdb定时任务, 将 Tsdb发送缓存中的数据 通过api连接池 发送到Tsdb
+func forward2InfluxdbTask(Q *list.SafeListLimited, node string, concurrent int) {
+
+	batch := g.Config().Influxdb.Batch // 一次发送,最多batch条数据
+	sema := nsema.NewSemaphore(concurrent)
+	addr := g.Config().Influxdb.Cluster[node]
+	retry := g.Config().Influxdb.MaxRetry
+
+	for {
+		items := Q.PopBackBy(batch)
+		count := len(items)
+		if count == 0 {
+			time.Sleep(DefaultSendTaskSleepInterval)
+			continue
+		}
+		pts := make([]*client.Point, count)
+		for i := 0; i < count; i++ {
+			pts[i] = items[i].(*client.Point)
+		}
+
+		sema.Acquire()
+		go func(addr string, itemList []*client.Point) {
+			defer sema.Release()
+			var err error
+
+			for i := 0; i < retry; i++ { //最多重试3次
+				err = InfluxdbConnPools.Send(addr, pts)
+				if err == nil {
+					proc.SendToInfluxdbCnt.IncrBy(int64(len(pts)))
+					break
+				}
+				time.Sleep(time.Millisecond * 10)
+			}
+
+			// statistics
+			if err != nil {
+				log.Printf("send to tsdb %s:%s fail: %v", node, addr, err)
+				proc.SendToInfluxdbFailCnt.IncrBy(int64(len(pts)))
+				return
+			}
+		}(addr, pts)
 	}
 }

@@ -21,12 +21,17 @@ type NConn interface {
 type ConnPool struct {
 	sync.RWMutex
 
-	Name     string
-	Address  string
-	MaxConns int
-	MaxIdle  int
-	Cnt      int64
-	New      func(name string) (NConn, error)
+	Name      string
+	Address   string
+	MaxConns  int
+	MaxIdle   int
+	Cnt       int64
+	Username  string
+	Password  string
+	Database  string
+	Precision string
+
+	New func(name string) (NConn, error)
 
 	active int
 	free   []NConn

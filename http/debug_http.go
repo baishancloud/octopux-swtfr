@@ -23,6 +23,8 @@ func configDebugHttpRoutes() {
 		var result string
 		receiver := args[0]
 		switch receiver {
+		case "tsdb":
+			result = strings.Join(sender.InfluxdbConnPools.Proc(), "\n")
 		case "judge":
 			result = strings.Join(sender.JudgeConnPools.Proc(), "\n")
 		case "graph":

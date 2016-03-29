@@ -70,6 +70,9 @@ func socketTelnetHandle(conn net.Conn) {
 	if cfg.Judge.Enabled {
 		sender.Push2JudgeSendQueue(items)
 	}
+	if cfg.Influxdb.Enabled {
+		sender.Push2TsdbSendQueue(items)
+	}
 
 	return
 

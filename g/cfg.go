@@ -24,6 +24,22 @@ type SocketConfig struct {
 	Timeout int    `json:"timeout"`
 }
 
+type InfluxdbConfig struct {
+	Enabled       bool                    `json:"enabled"`
+	Batch         int                     `json:"batch"`
+	Username      string                  `json:"username"`
+	Password      string                  `json:"password"`
+	Database      string                  `json:"database"`
+	ConnTimeout   int                     `json:"connTimeout"`
+	CallTimeout   int                     `json:"callTimeout"`
+	MaxConns      int                     `json:"maxConns"`
+	MaxIdle       int                     `json:"maxIdle"`
+	MaxRetry      int                     `json:"retry"`
+	Cluster       map[string]string       `json:"cluster"`
+	RemoveMetrics map[string]bool         `json:"remove"`
+	Cluster2      map[string]*ClusterNode `json:"cluster2"`
+}
+
 type JudgeConfig struct {
 	Enabled     bool                    `json:"enabled"`
 	Batch       int                     `json:"batch"`
@@ -54,12 +70,14 @@ type GraphConfig struct {
 }
 
 type GlobalConfig struct {
-	Debug  bool          `json:"debug"`
-	Http   *HttpConfig   `json:"http"`
-	Rpc    *RpcConfig    `json:"rpc"`
-	Socket *SocketConfig `json:"socket"`
-	Judge  *JudgeConfig  `json:"judge"`
-	Graph  *GraphConfig  `json:"graph"`
+	Debug    bool            `json:"debug"`
+	NodePath string          `json:"nodepatch"`
+	Http     *HttpConfig     `json:"http"`
+	Rpc      *RpcConfig      `json:"rpc"`
+	Socket   *SocketConfig   `json:"socket"`
+	Judge    *JudgeConfig    `json:"judge"`
+	Graph    *GraphConfig    `json:"graph"`
+	Influxdb *InfluxdbConfig `json:"influxdb"`
 }
 
 var (
@@ -97,6 +115,7 @@ func ParseConfig(cfg string) {
 	}
 
 	// split cluster config
+	c.Influxdb.Cluster2 = formatClusterItems(c.Influxdb.Cluster)
 	c.Judge.Cluster2 = formatClusterItems(c.Judge.Cluster)
 	c.Graph.Cluster2 = formatClusterItems(c.Graph.Cluster)
 	c.Graph.ClusterMigrating2 = formatClusterItems(c.Graph.ClusterMigrating)

@@ -29,6 +29,7 @@ func main() {
 
 	// global config
 	g.ParseConfig(*cfg)
+	g.InitNodemap()
 	// proc
 	proc.Start()
 

@@ -139,6 +139,10 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 		sender.Push2GraphSendQueue(items, cfg.Graph.Migrating)
 	}
 
+	if cfg.Influxdb.Enabled {
+		sender.Push2TsdbSendQueue(items)
+	}
+
 	if cfg.Judge.Enabled {
 		sender.Push2JudgeSendQueue(items)
 	}

@@ -9,6 +9,15 @@ import (
 func initConnPools() {
 	cfg := g.Config()
 
+       if cfg.Influxdb.Enabled {
+               influxdbInstances := nset.NewStringSet()
+               for _, instance := range cfg.Influxdb.Cluster {
+                       influxdbInstances.Add(instance)
+               }
+               InfluxdbConnPools = cpool.CreateInfluxdbCliPools(cfg.Influxdb.MaxConns, cfg.Influxdb.MaxIdle,
+                       cfg.Influxdb.ConnTimeout, cfg.Influxdb.CallTimeout, influxdbInstances.ToSlice())
+
+       }
 	judgeInstances := nset.NewStringSet()
 	for _, instance := range cfg.Judge.Cluster {
 		judgeInstances.Add(instance)
@@ -40,6 +49,8 @@ func initConnPools() {
 }
 
 func DestroyConnPools() {
+
+	InfluxdbConnPools.Destroy()
 	JudgeConnPools.Destroy()
 	GraphConnPools.Destroy()
 	GraphMigratingConnPools.Destroy()

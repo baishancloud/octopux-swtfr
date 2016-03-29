@@ -11,6 +11,12 @@ func initSendQueues() {
 		Q := nlist.NewSafeListLimited(DefaultSendQueueMaxSize)
 		JudgeQueues[node] = Q
 	}
+	if cfg.Influxdb.Enabled {
+		for tnode, _ := range cfg.Influxdb.Cluster {
+			Q := nlist.NewSafeListLimited(DefaultSendQueueMaxSize)
+			InfluxdbQueues[tnode] = Q
+		}
+	}
 
 	for node, nitem := range cfg.Graph.Cluster2 {
 		for _, addr := range nitem.Addrs {

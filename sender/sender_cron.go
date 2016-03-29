@@ -35,6 +35,7 @@ func startLogCron() {
 }
 
 func refreshSendingCacheSize() {
+	proc.InfluxdbQueuesCnt.SetCnt(calcSendCacheSize(InfluxdbQueues))
 	proc.JudgeQueuesCnt.SetCnt(calcSendCacheSize(JudgeQueues))
 	proc.GraphQueuesCnt.SetCnt(calcSendCacheSize(GraphQueues))
 	proc.GraphMigratingQueuesCnt.SetCnt(calcSendCacheSize(GraphMigratingQueues))

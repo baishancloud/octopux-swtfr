@@ -3,10 +3,12 @@ package sender
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/baishancloud/swtfr/g"
 	"github.com/baishancloud/swtfr/proc"
 	cpool "github.com/baishancloud/swtfr/sender/conn_pool"
+	"github.com/influxdata/influxdb/client/v2"
 	cmodel "github.com/open-falcon/common/model"
 	nlist "github.com/toolkits/container/list"
 )
@@ -26,6 +28,7 @@ var (
 // 发送缓存队列
 // node -> queue_of_data
 var (
+	InfluxdbQueues       = make(map[string]*nlist.SafeListLimited)
 	JudgeQueues          = make(map[string]*nlist.SafeListLimited)
 	GraphQueues          = make(map[string]*nlist.SafeListLimited)
 	GraphMigratingQueues = make(map[string]*nlist.SafeListLimited)
@@ -34,6 +37,7 @@ var (
 // 连接池
 // node_address -> connection_pool
 var (
+	InfluxdbConnPools       *cpool.InfluxdbConnPoolHelper
 	JudgeConnPools          *cpool.SafeRpcConnPools
 	GraphConnPools          *cpool.SafeRpcConnPools
 	GraphMigratingConnPools *cpool.SafeRpcConnPools
@@ -182,6 +186,51 @@ func convert2GraphItem(d *cmodel.MetaData) (*cmodel.GraphItem, error) {
 	item.Timestamp = alignTs(item.Timestamp, int64(item.Step)) //item.Timestamp - item.Timestamp%int64(item.Step)
 
 	return item, nil
+}
+
+// 将数据 打入所有的Tsdb的发送缓存队列, 相互备份
+func Push2TsdbSendQueue(items []*cmodel.MetaData) {
+	removeMetrics := g.Config().Influxdb.RemoveMetrics
+	//log.Printf("Push2TsdbSendQueue")
+	for _, item := range items {
+		b, ok := removeMetrics[item.Metric]
+		//log.Printf ("select:%V,%V,%V", b, ok,item )
+		if b && ok {
+			continue
+		}
+		influxPoint := Convert2InfluxPoint(item)
+		errCnt := 0
+		for _, Q := range InfluxdbQueues {
+			if !Q.PushFront(influxPoint) {
+				errCnt += 1
+			}
+		}
+
+		// statistics
+		if errCnt > 0 {
+			proc.SendToInfluxdbDropCnt.Incr()
+		}
+
+	}
+}
+
+// 转化为tsdb格式
+func Convert2InfluxPoint(d *cmodel.MetaData) *client.Point {
+	d.Tags["Endpoint"] = d.Endpoint
+	if d.Metric == "switch.if.Out" || d.Metric == "switch.if.In" {
+		nm := *(g.NodeMap())
+		nodeid, isok := nm[d.Tags["ip"]+d.Tags["ifName"]]
+		if isok {
+			d.Tags["nodeid"] = nodeid
+		}
+	}
+	pt, _ := client.NewPoint(
+		d.Metric,
+		d.Tags,
+		map[string]interface{}{"value": d.Value},
+		time.Unix(d.Timestamp, 0),
+	)
+	return pt
 }
 
 func alignTs(ts int64, period int64) int64 {
