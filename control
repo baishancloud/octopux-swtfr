@@ -10,6 +10,7 @@ app=falcon-$module
 conf=cfg.json
 pidfile=var/app.pid
 logfile=var/app.log
+supconf=$app.conf
 
 function check_pid() {
 	running=`ps -C $app |grep -v "PID TTY"  |wc -l`
@@ -17,9 +18,9 @@ function check_pid() {
 }
 
 function configlocal(){
-        if ! [ -f /etc/supervisor/conf.d/falcon-swcollector.conf ];then
+        if ! [ -f /etc/supervisor/conf.d/${supconf} ];then
                 echo "Config file supervisord doesn't exist, creating one."
-                cp falcon-swcollector.conf /etc/supervisor/conf.d/falcon-swcollector.conf
+                cp ${supconf} /etc/supervisor/conf.d/${supconf}
                 service  supervisord restart
         fi
 }
