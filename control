@@ -21,7 +21,9 @@ function configlocal(){
         if ! [ -f /etc/supervisor/conf.d/${supconf} ];then
                 echo "Config file supervisord doesn't exist, creating one."
                 cp ${supconf} /etc/supervisor/conf.d/${supconf}
-                service  supervisord restart
+                supervisorctl reread
+				supervisorctl update
+				supervisorctl start falcon-swcollec
         fi
 }
 
