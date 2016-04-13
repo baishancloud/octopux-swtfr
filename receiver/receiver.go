@@ -1,8 +1,8 @@
 package receiver
 
 import (
-	"github.com/baishancloud/swtfr/receiver/rpc"
-	"github.com/baishancloud/swtfr/receiver/socket"
+	"github.com/baishancloud/octopux-swtfr/receiver/rpc"
+	"github.com/baishancloud/octopux-swtfr/receiver/socket"
 )
 
 func Start() {

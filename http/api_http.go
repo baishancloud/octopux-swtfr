@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	trpc "github.com/baishancloud/swtfr/receiver/rpc"
+	trpc "github.com/baishancloud/octopux-swtfr/receiver/rpc"
 	cmodel "github.com/open-falcon/common/model"
 )
 

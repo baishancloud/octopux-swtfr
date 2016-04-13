@@ -1,7 +1,7 @@
 package sender
 
 import (
-	"github.com/baishancloud/swtfr/g"
+	"github.com/baishancloud/octopux-swtfr/g"
 	"stathat.com/c/consistent"
 )
 

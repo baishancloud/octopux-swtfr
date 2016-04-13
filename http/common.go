@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/baishancloud/swtfr/g"
+	"github.com/baishancloud/octopux-swtfr/g"
 	"github.com/toolkits/file"
 )
 

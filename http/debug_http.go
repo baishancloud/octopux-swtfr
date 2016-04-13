@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/baishancloud/swtfr/sender"
+	"github.com/baishancloud/octopux-swtfr/sender"
 )
 
 func configDebugHttpRoutes() {

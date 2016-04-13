@@ -6,7 +6,7 @@ import (
 	"net/rpc"
 	"net/rpc/jsonrpc"
 
-	"github.com/baishancloud/swtfr/g"
+	"github.com/baishancloud/octopux-swtfr/g"
 )
 
 func StartRpc() {

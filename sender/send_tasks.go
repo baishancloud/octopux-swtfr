@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/baishancloud/swtfr/g"
-	"github.com/baishancloud/swtfr/proc"
+	"github.com/baishancloud/octopux-swtfr/g"
+	"github.com/baishancloud/octopux-swtfr/proc"
 	"github.com/influxdata/influxdb/client/v2"
 	cmodel "github.com/open-falcon/common/model"
 	nsema "github.com/toolkits/concurrent/semaphore"
@@ -203,13 +203,34 @@ func forward2GraphMigratingTask(Q *list.SafeListLimited, node string, addr strin
 	}
 }
 
-// Tsdb定时任务, 将 Tsdb发送缓存中的数据 通过api连接池 发送到Tsdb
-func forward2InfluxdbTask(Q *list.SafeListLimited, node string, concurrent int) {
+func coreSend2Influxdb(addr string, sema *nsema.Semaphore, retry int, itemList []*client.Point) {
+	defer sema.Release()
+	var err error
 
-	batch := g.Config().Influxdb.Batch // 一次发送,最多batch条数据
-	sema := nsema.NewSemaphore(concurrent)
-	addr := g.Config().Influxdb.Cluster[node]
-	retry := g.Config().Influxdb.MaxRetry
+	for i := 0; i < retry; i++ { //最多重试3次
+		err = InfluxdbConnPools.Send(addr, itemList)
+		if err == nil {
+			proc.SendToInfluxdbCnt.IncrBy(int64(len(itemList)))
+			break
+		}
+		time.Sleep(time.Millisecond * 10)
+	}
+
+	// statistics
+	if err != nil {
+		log.Printf("send to tsdb itemList%s fail: %v", addr, err)
+		proc.SendToInfluxdbFailCnt.IncrBy(int64(len(itemList)))
+		return
+	}
+}
+
+// Tsdb定时任务, 将 Tsdb发送缓存中的数据 通过api连接池 发送到Tsdb
+// 单个Cluster配置多个influxdb地址，修改为并发发送。
+func forward2InfluxdbTask(Q *list.SafeListLimited, node string, concurrent int) {
+	cfg := g.Config()
+	batch := cfg.Influxdb.Batch // 一次发送,最多batch条数据
+	sema := nsema.NewSemaphore(concurrent * len(cfg.Influxdb.Cluster2[node].Addrs))
+	retry := cfg.Influxdb.MaxRetry
 
 	for {
 		items := Q.PopBackBy(batch)
@@ -222,27 +243,10 @@ func forward2InfluxdbTask(Q *list.SafeListLimited, node string, concurrent int) 
 		for i := 0; i < count; i++ {
 			pts[i] = items[i].(*client.Point)
 		}
+		for _, addr := range cfg.Influxdb.Cluster2[node].Addrs {
+			sema.Acquire()
+			go coreSend2Influxdb(addr, sema, retry, pts)
+		}
 
-		sema.Acquire()
-		go func(addr string, itemList []*client.Point) {
-			defer sema.Release()
-			var err error
-
-			for i := 0; i < retry; i++ { //最多重试3次
-				err = InfluxdbConnPools.Send(addr, pts)
-				if err == nil {
-					proc.SendToInfluxdbCnt.IncrBy(int64(len(pts)))
-					break
-				}
-				time.Sleep(time.Millisecond * 10)
-			}
-
-			// statistics
-			if err != nil {
-				log.Printf("send to tsdb %s:%s fail: %v", node, addr, err)
-				proc.SendToInfluxdbFailCnt.IncrBy(int64(len(pts)))
-				return
-			}
-		}(addr, pts)
 	}
 }

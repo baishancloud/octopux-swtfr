@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/baishancloud/swtfr/proc"
+	"github.com/baishancloud/octopux-swtfr/proc"
 	cutils "github.com/open-falcon/common/utils"
 )
 

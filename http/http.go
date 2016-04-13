@@ -6,7 +6,7 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 
-	"github.com/baishancloud/swtfr/g"
+	"github.com/baishancloud/octopux-swtfr/g"
 )
 
 type Dto struct {

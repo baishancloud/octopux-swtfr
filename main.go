@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/baishancloud/swtfr/g"
-	"github.com/baishancloud/swtfr/http"
-	"github.com/baishancloud/swtfr/proc"
-	"github.com/baishancloud/swtfr/receiver"
-	"github.com/baishancloud/swtfr/sender"
+	"github.com/baishancloud/octopux-swtfr/g"
+	"github.com/baishancloud/octopux-swtfr/http"
+	"github.com/baishancloud/octopux-swtfr/proc"
+	"github.com/baishancloud/octopux-swtfr/receiver"
+	"github.com/baishancloud/octopux-swtfr/sender"
 )
 
 func main() {

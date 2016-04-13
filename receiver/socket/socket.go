@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/baishancloud/swtfr/g"
+	"github.com/baishancloud/octopux-swtfr/g"
 )
 
 func StartSocket() {

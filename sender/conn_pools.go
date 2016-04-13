@@ -1,8 +1,8 @@
 package sender
 
 import (
-	"github.com/baishancloud/swtfr/g"
-	cpool "github.com/baishancloud/swtfr/sender/conn_pool"
+	"github.com/baishancloud/octopux-swtfr/g"
+	cpool "github.com/baishancloud/octopux-swtfr/sender/conn_pool"
 	nset "github.com/toolkits/container/set"
 )
 

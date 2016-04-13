@@ -14,9 +14,10 @@ import (
 // 0.0.11: fix bug: all graphs' traffic delined when one graph broken down, modify retry interval
 // 0.0.14: support sending multi copies to graph node, align ts for judge, add filter
 // 0.1.4: 添加influxdb存储支持；用于流量采集系统，修改程序名称以区分；修改程序启功方式支持supervisor。
+// 0.1.5: 修改项目名称
 
 const (
-	VERSION      = "0.1.4"
+	VERSION      = "0.1.5"
 	GAUGE        = "GAUGE"
 	COUNTER      = "COUNTER"
 	DERIVE       = "DERIVE"

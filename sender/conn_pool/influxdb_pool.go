@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/baishancloud/swtfr/g"
+	"github.com/baishancloud/octopux-swtfr/g"
 	"github.com/influxdata/influxdb/client/v2"
 )
 

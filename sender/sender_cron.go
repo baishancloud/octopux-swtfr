@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/baishancloud/swtfr/proc"
+	"github.com/baishancloud/octopux-swtfr/proc"
 	"github.com/toolkits/container/list"
 )
 

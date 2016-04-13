@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/baishancloud/swtfr/g"
-	"github.com/baishancloud/swtfr/proc"
-	"github.com/baishancloud/swtfr/sender"
+	"github.com/baishancloud/octopux-swtfr/g"
+	"github.com/baishancloud/octopux-swtfr/proc"
+	"github.com/baishancloud/octopux-swtfr/sender"
 	cmodel "github.com/open-falcon/common/model"
 )
 

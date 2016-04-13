@@ -5,9 +5,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/baishancloud/swtfr/g"
-	"github.com/baishancloud/swtfr/proc"
-	cpool "github.com/baishancloud/swtfr/sender/conn_pool"
+	"github.com/baishancloud/octopux-swtfr/g"
+	"github.com/baishancloud/octopux-swtfr/proc"
+	cpool "github.com/baishancloud/octopux-swtfr/sender/conn_pool"
 	"github.com/influxdata/influxdb/client/v2"
 	cmodel "github.com/open-falcon/common/model"
 	nlist "github.com/toolkits/container/list"
