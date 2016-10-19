@@ -22,8 +22,7 @@ function configlocal(){
                 echo "Config file supervisord doesn't exist, creating one."
                 cp ${supconf} /etc/supervisor/conf.d/${supconf}
                 supervisorctl reread
-				supervisorctl update
-				supervisorctl start falcon-swcollec
+				 supervisorctl update
         fi
 }
 
@@ -42,7 +41,7 @@ function run() {
         cp cfg.example.json $conf
     fi
     ulimit -HSn 65536
-    ./$app -c $conf &> $logfile
+    ./$app -c $conf >>$logfile 2>&1
 }
 
 function start() {
@@ -54,7 +53,7 @@ function start() {
         return 1
     fi
     ulimit -HSn 65536
-    nohup ./$app -c $conf &> $logfile &
+    nohup ./$app >>$logfile 2>&1 &
     echo $! > $pidfile
     echo "$app started..., pid=$!"
 }

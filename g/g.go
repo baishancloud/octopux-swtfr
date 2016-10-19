@@ -15,9 +15,10 @@ import (
 // 0.0.14: support sending multi copies to graph node, align ts for judge, add filter
 // 0.1.4: 添加influxdb存储支持；用于流量采集系统，修改程序名称以区分；修改程序启功方式支持supervisor。
 // 0.1.5: 修改项目名称
+// 0.1.7：delete judge and graph
 
 const (
-	VERSION      = "0.1.5"
+	VERSION      = "0.1.7"
 	GAUGE        = "GAUGE"
 	COUNTER      = "COUNTER"
 	DERIVE       = "DERIVE"

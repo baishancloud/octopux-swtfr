@@ -1,11 +1,9 @@
 package sender
 
 import (
-	"log"
-	"strings"
 	"time"
 
-	"github.com/baishancloud/octopux-swtfr/proc"
+	pfc "github.com/baishancloud/goperfcounter"
 	"github.com/toolkits/container/list"
 )
 
@@ -35,10 +33,8 @@ func startLogCron() {
 }
 
 func refreshSendingCacheSize() {
-	proc.InfluxdbQueuesCnt.SetCnt(calcSendCacheSize(InfluxdbQueues))
-	proc.JudgeQueuesCnt.SetCnt(calcSendCacheSize(JudgeQueues))
-	proc.GraphQueuesCnt.SetCnt(calcSendCacheSize(GraphQueues))
-	proc.GraphMigratingQueuesCnt.SetCnt(calcSendCacheSize(GraphMigratingQueues))
+	pfc.Gauge("InfluxdbQueues", calcSendCacheSize(InfluxdbQueues))
+
 }
 func calcSendCacheSize(mapList map[string]*list.SafeListLimited) int64 {
 	var cnt int64 = 0
@@ -51,5 +47,5 @@ func calcSendCacheSize(mapList map[string]*list.SafeListLimited) int64 {
 }
 
 func logConnPoolsProc() {
-	log.Printf("connPools proc: \n%v", strings.Join(GraphConnPools.Proc(), "\n"))
+
 }

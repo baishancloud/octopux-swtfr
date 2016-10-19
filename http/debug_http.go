@@ -25,12 +25,6 @@ func configDebugHttpRoutes() {
 		switch receiver {
 		case "tsdb":
 			result = strings.Join(sender.InfluxdbConnPools.Proc(), "\n")
-		case "judge":
-			result = strings.Join(sender.JudgeConnPools.Proc(), "\n")
-		case "graph":
-			result = strings.Join(sender.GraphConnPools.Proc(), "\n")
-		case "graphmigrating":
-			result = strings.Join(sender.GraphMigratingConnPools.Proc(), "\n")
 		default:
 			result = fmt.Sprintf("bad args, module not exist\n")
 		}

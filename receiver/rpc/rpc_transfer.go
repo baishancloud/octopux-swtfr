@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"time"
 
+	pfc "github.com/baishancloud/goperfcounter"
 	"github.com/baishancloud/octopux-swtfr/g"
-	"github.com/baishancloud/octopux-swtfr/proc"
 	"github.com/baishancloud/octopux-swtfr/sender"
 	cmodel "github.com/open-falcon/common/model"
 	cutils "github.com/open-falcon/common/utils"
@@ -42,7 +42,7 @@ func (t *Transfer) Update(args []*cmodel.MetricValue, reply *cmodel.TransferResp
 func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse, from string) error {
 	start := time.Now()
 	reply.Invalid = 0
-
+	//log.Printf("rpc  call \n")
 	items := []*cmodel.MetaData{}
 	for _, v := range args {
 		if v == nil {
@@ -126,25 +126,12 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 
 	// statistics
 	cnt := int64(len(items))
-	proc.RecvCnt.IncrBy(cnt)
-	if from == "rpc" {
-		proc.RpcRecvCnt.IncrBy(cnt)
-	} else if from == "http" {
-		proc.HttpRecvCnt.IncrBy(cnt)
-	}
+	pfc.Meter("recvcnt", cnt)
 
 	cfg := g.Config()
 
-	if cfg.Graph.Enabled {
-		sender.Push2GraphSendQueue(items, cfg.Graph.Migrating)
-	}
-
 	if cfg.Influxdb.Enabled {
 		sender.Push2TsdbSendQueue(items)
-	}
-
-	if cfg.Judge.Enabled {
-		sender.Push2JudgeSendQueue(items)
 	}
 
 	reply.Message = "ok"

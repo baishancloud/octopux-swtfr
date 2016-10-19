@@ -28,7 +28,6 @@ func startHttpServer() {
 	}
 
 	configCommonRoutes()
-	configProcHttpRoutes()
 	configDebugHttpRoutes()
 	configApiHttpRoutes()
 

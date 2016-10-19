@@ -2,10 +2,11 @@ package g
 
 import (
 	"encoding/json"
-	"github.com/toolkits/file"
 	"log"
 	"strings"
 	"sync"
+
+	"github.com/toolkits/file"
 )
 
 type HttpConfig struct {
@@ -16,12 +17,6 @@ type HttpConfig struct {
 type RpcConfig struct {
 	Enabled bool   `json:"enabled"`
 	Listen  string `json:"listen"`
-}
-
-type SocketConfig struct {
-	Enabled bool   `json:"enabled"`
-	Listen  string `json:"listen"`
-	Timeout int    `json:"timeout"`
 }
 
 type InfluxdbConfig struct {
@@ -40,43 +35,12 @@ type InfluxdbConfig struct {
 	Cluster2      map[string]*ClusterNode `json:"cluster2"`
 }
 
-type JudgeConfig struct {
-	Enabled     bool                    `json:"enabled"`
-	Batch       int                     `json:"batch"`
-	ConnTimeout int                     `json:"connTimeout"`
-	CallTimeout int                     `json:"callTimeout"`
-	PingMethod  string                  `json:"pingMethod"`
-	MaxConns    int                     `json:"maxConns"`
-	MaxIdle     int                     `json:"maxIdle"`
-	Replicas    int                     `json:"replicas"`
-	Cluster     map[string]string       `json:"cluster"`
-	Cluster2    map[string]*ClusterNode `json:"cluster2"`
-}
-
-type GraphConfig struct {
-	Enabled           bool                    `json:"enabled"`
-	Batch             int                     `json:"batch"`
-	ConnTimeout       int                     `json:"connTimeout"`
-	CallTimeout       int                     `json:"callTimeout"`
-	PingMethod        string                  `json:"pingMethod"`
-	MaxConns          int                     `json:"maxConns"`
-	MaxIdle           int                     `json:"maxIdle"`
-	Replicas          int                     `json:"replicas"`
-	Migrating         bool                    `json:"migrating"`
-	Cluster           map[string]string       `json:"cluster"`
-	ClusterMigrating  map[string]string       `json:"clusterMigrating"`
-	Cluster2          map[string]*ClusterNode `json:"cluster2"`
-	ClusterMigrating2 map[string]*ClusterNode `json:"clusterMigrating2"`
-}
-
 type GlobalConfig struct {
-	Debug    bool            `json:"debug"`
-	NodePath string          `json:"nodepatch"`
-	Http     *HttpConfig     `json:"http"`
-	Rpc      *RpcConfig      `json:"rpc"`
-	Socket   *SocketConfig   `json:"socket"`
-	Judge    *JudgeConfig    `json:"judge"`
-	Graph    *GraphConfig    `json:"graph"`
+	Debug    bool        `json:"debug"`
+	NodePath string      `json:"nodepatch"`
+	Http     *HttpConfig `json:"http"`
+	Rpc      *RpcConfig  `json:"rpc"`
+
 	Influxdb *InfluxdbConfig `json:"influxdb"`
 }
 
@@ -116,9 +80,6 @@ func ParseConfig(cfg string) {
 
 	// split cluster config
 	c.Influxdb.Cluster2 = formatClusterItems(c.Influxdb.Cluster)
-	c.Judge.Cluster2 = formatClusterItems(c.Judge.Cluster)
-	c.Graph.Cluster2 = formatClusterItems(c.Graph.Cluster)
-	c.Graph.ClusterMigrating2 = formatClusterItems(c.Graph.ClusterMigrating)
 
 	configLock.Lock()
 	defer configLock.Unlock()

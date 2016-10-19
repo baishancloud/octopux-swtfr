@@ -9,23 +9,6 @@
         "enabled": true,
         "listen": "0.0.0.0:8433"
     },
-    "socket": {
-        "enabled": true,
-        "listen": "0.0.0.0:4444",
-        "timeout": 3600
-    },
-    "judge": {
-        "enabled": false,
-        "batch": 200,
-        "connTimeout": 1000,
-        "callTimeout": 5000,
-        "maxConns": 32,
-        "maxIdle": 32,
-        "replicas": 500,
-        "cluster": {
-            "judge-00": "127.0.0.1:6080"
-        }
-    },
     "influxdb": {
         "enabled": true,
         "batch": 200,
@@ -41,22 +24,14 @@
             "influxdb-00": "http://127.0.0.1:8086"
         },
         "remove": {
-            "agent.alive": true
-        }
-    },
-    "graph": {
-        "enabled": false,
-        "batch": 200,
-        "connTimeout": 1000,
-        "callTimeout": 5000,
-        "maxConns": 32,
-        "maxIdle": 32,
-        "replicas": 500,
-        "migrating": false,
-        "cluster": {
-            "graph-00": "127.0.0.1:6070"
-        },
-        "clusterMigrating": {
+            "traffic.lan.in": true,
+            "traffic.lan.out": true,
+            "traffic.wan.in": true,
+            "traffic.wan.out": true,
+            "switch.if.In": true,
+            "switch.if.Out": true,
+            "switch.if.InPkts": true,
+            "switch.if.OutPkts": true
         }
     }
 }

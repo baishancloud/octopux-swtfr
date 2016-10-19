@@ -1,18 +1,9 @@
 package sender
 
-import (
-	"github.com/baishancloud/octopux-swtfr/g"
-	"stathat.com/c/consistent"
-)
+import "stathat.com/c/consistent"
 
 func initNodeRings() {
-	cfg := g.Config()
 
-	JudgeNodeRing = newConsistentHashNodesRing(cfg.Judge.Replicas, KeysOfMap(cfg.Judge.Cluster))
-	GraphNodeRing = newConsistentHashNodesRing(cfg.Graph.Replicas, KeysOfMap(cfg.Graph.Cluster))
-	if cfg.Graph.Migrating && cfg.Graph.ClusterMigrating != nil {
-		GraphMigratingNodeRing = newConsistentHashNodesRing(cfg.Graph.Replicas, KeysOfMap(cfg.Graph.ClusterMigrating))
-	}
 }
 
 // TODO 考虑放到公共组件库,或utils库

@@ -84,15 +84,6 @@ func (this *InfluxdbClient) Connect() error {
 			return err
 		}
 
-		// Create Database if it doesn't exist
-		_, e := c.Query(client.Query{
-			Command: fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s", this.Database),
-		})
-
-		if e != nil {
-			log.Println("Database creation failed: " + e.Error())
-		}
-
 		this.cli = c
 	}
 
