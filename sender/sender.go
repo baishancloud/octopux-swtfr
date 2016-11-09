@@ -63,7 +63,7 @@ func Push2TsdbSendQueue(items []*cmodel.MetaData) {
 
 		// statistics
 		if errCnt > 0 {
-			pfc.Meter("SendToInfluxdbDropCnt", int64(errCnt))
+			pfc.Meter("SWTFRSendToInfluxdbDropCnt", int64(errCnt))
 		}
 
 	}

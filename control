@@ -53,13 +53,12 @@ function start() {
         return 1
     fi
     ulimit -HSn 65536
-    nohup ./$app >>$logfile 2>&1 &
+    nohup ./$app -c $conf  >>$logfile 2>&1 &
     echo $! > $pidfile
     echo "$app started..., pid=$!"
 }
 
 function stop() {
-    pid=`ps -C $app |grep -v "PID TTY" | awk '{print $1}'`
     kill $(pidof $app)
     echo "$app stoped..."
 }
@@ -74,8 +73,7 @@ function status() {
     check_pid
     running=$?
     if [ $running -gt 0 ];then
-        echo -n "$app now is running, pid="
-        ps -C $app |grep -v "PID TTY" | awk '{print $1}'
+        echo -n "$app now is running, pid=" $running
     else
         echo "$app is stoped"
     fi
@@ -105,7 +103,7 @@ function pack() {
     build
     git log -1 --pretty=%h > gitversion
     version=`./$app -v`
-    tar zcvf $app-$version.tar.gz control $app cfg.example.json falcon-swtfr.conf getnodefile.sh  gitversion ./test/debug
+    tar zcvf $app-$version.tar.gz control $app cfg.example.json octopux-swtfr.conf perfcounter.json gitversion ./test/debug
 }
 
 function packbin() {
@@ -117,7 +115,7 @@ function packbin() {
 
 
 function help() {
-    echo "$0 build|pack|packbin|start|stop|restart|status|tail"
+    echo "$0 build|pack|packbin|start|stop|restart|status|tail|runconfiglocal"
 }
 
 if [ "$1" == "" ]; then

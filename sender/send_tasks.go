@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/baishancloud/octopux-swtfr/g"
 	pfc "github.com/baishancloud/goperfcounter"
+	"github.com/baishancloud/octopux-swtfr/g"
 	"github.com/influxdata/influxdb/client/v2"
 	nsema "github.com/toolkits/concurrent/semaphore"
 	"github.com/toolkits/container/list"
@@ -65,7 +65,7 @@ func forward2InfluxdbTask(Q *list.SafeListLimited, node string, concurrent int) 
 			for i := 0; i < retry; i++ { //最多重试3次
 				err = InfluxdbConnPools.Send(addr, pts)
 				if err == nil {
-					pfc.Meter("SendToInfluxdbCnt", int64(len(pts)))
+					pfc.Meter("SWTFRSendCnt"+node, int64(len(pts)))
 					break
 				}
 				time.Sleep(time.Millisecond * 10)
@@ -74,9 +74,9 @@ func forward2InfluxdbTask(Q *list.SafeListLimited, node string, concurrent int) 
 			// statistics
 			if err != nil {
 				log.Printf("send to tsdb %s:%s fail: %v", node, addr, err)
-				pfc.Meter("SendToInfluxdbFaildCnt", int64(len(pts)))
+				pfc.Meter("SWTFRSendFail"+node, int64(len(pts)))
 			}
-			pfc.Histogram("SendToInfluxdbTime", int64(time.Since(start)/time.Millisecond))
+			pfc.Histogram("SWTFRSendTime"+node, int64(time.Since(start)/time.Millisecond))
 		}(addr, pts)
 	}
 }

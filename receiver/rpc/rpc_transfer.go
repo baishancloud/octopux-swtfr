@@ -10,6 +10,7 @@ import (
 	"github.com/baishancloud/octopux-swtfr/sender"
 	cmodel "github.com/open-falcon/common/model"
 	cutils "github.com/open-falcon/common/utils"
+	//"log"
 )
 
 type Transfer int
@@ -126,7 +127,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 
 	// statistics
 	cnt := int64(len(items))
-	pfc.Meter("recvcnt", cnt)
+	pfc.Meter("SWTFRRevc", cnt)
 
 	cfg := g.Config()
 

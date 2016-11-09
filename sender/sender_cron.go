@@ -33,7 +33,7 @@ func startLogCron() {
 }
 
 func refreshSendingCacheSize() {
-	pfc.Gauge("InfluxdbQueues", calcSendCacheSize(InfluxdbQueues))
+	pfc.Gauge("SWTFRInfluxdbQueueSize", calcSendCacheSize(InfluxdbQueues))
 
 }
 func calcSendCacheSize(mapList map[string]*list.SafeListLimited) int64 {
