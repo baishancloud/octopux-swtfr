@@ -64,9 +64,9 @@ function stop() {
 }
 
 function restart() {
-    stop
-    sleep 1
-    start
+    ulimit -HSn 65536
+    kill -SIGHUP $(pidof $app)
+    echo -n "$app now graceful restart!"
 }
 
 function status() {

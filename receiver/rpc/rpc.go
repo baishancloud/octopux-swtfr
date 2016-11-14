@@ -41,6 +41,7 @@ func RpcServe(ln *net.TCPListener) {
 		conn, err := ln.Accept()
 		if err != nil {
 			if nerr, ok := err.(net.Error); ok && nerr.Timeout() {
+				ln.Close()
 				fmt.Println("Stop rpc accepting connections")
 				return
 			}

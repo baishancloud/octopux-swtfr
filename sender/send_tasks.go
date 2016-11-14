@@ -51,7 +51,7 @@ func forward2InfluxdbTask(Q *list.SafeListLimited, node string, concurrent int, 
 		count := len(items)
 		if count == 0 {
 			time.Sleep(DefaultSendTaskSleepInterval)
-			if server.IsStop() && Q.Len() == 0 {
+			if server.IsRun() == false && Q.Len() == 0 {
 				return
 			}
 			continue

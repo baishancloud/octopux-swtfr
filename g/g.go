@@ -17,9 +17,10 @@ import (
 // 0.1.5: 修改项目名称
 // 0.1.7：删除 judge 和 graph 部分
 // 0.1.9: 添加 mallard pfc统计
+// 0.2.0: 添加优雅重启支持
 
 const (
-	VERSION      = "0.1.9"
+	VERSION      = "0.2.0"
 	GAUGE        = "GAUGE"
 	COUNTER      = "COUNTER"
 	DERIVE       = "DERIVE"

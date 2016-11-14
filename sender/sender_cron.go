@@ -9,14 +9,12 @@ import (
 )
 
 const (
-	DefaultProcCronPeriod = time.Duration(5) * time.Second    //ProcCron的周期,默认1s
-	DefaultLogCronPeriod  = time.Duration(3600) * time.Second //LogCron的周期,默认300s
+	DefaultProcCronPeriod = time.Duration(10) * time.Second //ProcCron的周期,默认1s
 )
 
 // send_cron程序入口
 func startSenderCron(server *g.ReceiverStatusManager) {
 	go startProcCron(server)
-	go startLogCron(server)
 }
 
 func startProcCron(server *g.ReceiverStatusManager) {
@@ -25,19 +23,7 @@ func startProcCron(server *g.ReceiverStatusManager) {
 	for {
 		time.Sleep(DefaultProcCronPeriod)
 		refreshSendingCacheSize()
-		if server.IsStop() {
-			return
-		}
-	}
-}
-
-func startLogCron(server *g.ReceiverStatusManager) {
-	server.Add(1)
-	defer server.Done()
-	for {
-		time.Sleep(DefaultLogCronPeriod)
-		logConnPoolsProc()
-		if server.IsStop() {
+		if server.IsRun() == false {
 			return
 		}
 	}
@@ -55,8 +41,4 @@ func calcSendCacheSize(mapList map[string]*list.SafeListLimited) int64 {
 		}
 	}
 	return cnt
-}
-
-func logConnPoolsProc() {
-
 }

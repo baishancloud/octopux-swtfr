@@ -4,9 +4,8 @@ import "sync"
 
 type ReceiverStatusManager struct {
 	sync.WaitGroup
-	lock   sync.RWMutex
-	isRun  bool
-	isStop bool
+	lock  sync.RWMutex
+	isRun bool
 }
 
 func NewReceiverStatusManager() *ReceiverStatusManager {
@@ -19,12 +18,6 @@ func (r *ReceiverStatusManager) IsRun() bool {
 	r.lock.RLock()
 	defer r.lock.RUnlock()
 	return r.isRun
-}
-
-func (r *ReceiverStatusManager) IsStop() bool {
-	r.lock.RLock()
-	defer r.lock.RUnlock()
-	return r.isStop
 }
 
 func (r *ReceiverStatusManager) Run() {
