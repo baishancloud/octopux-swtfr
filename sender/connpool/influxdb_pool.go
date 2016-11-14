@@ -1,4 +1,4 @@
-package conn_pool
+package connpool
 
 //Influxdb
 import (
@@ -55,7 +55,7 @@ func (this *InfluxdbClient) Connect() error {
 
 	switch {
 	case strings.HasPrefix(this.Address, "udp"):
-		parsed_url, err := url.Parse(this.Address)
+		parsedURL, err := url.Parse(this.Address)
 		if err != nil {
 			return err
 		}
@@ -64,7 +64,7 @@ func (this *InfluxdbClient) Connect() error {
 			this.UDPPayload = client.UDPPayloadSize
 		}
 		c, err := client.NewUDPClient(client.UDPConfig{
-			Addr:        parsed_url.Host,
+			Addr:        parsedURL.Host,
 			PayloadSize: this.UDPPayload,
 		})
 		if err != nil {

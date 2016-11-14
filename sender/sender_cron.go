@@ -4,6 +4,7 @@ import (
 	"time"
 
 	pfc "github.com/baishancloud/goperfcounter"
+	"github.com/baishancloud/octopux-swtfr/g"
 	"github.com/toolkits/container/list"
 )
 
@@ -13,22 +14,32 @@ const (
 )
 
 // send_cron程序入口
-func startSenderCron() {
-	go startProcCron()
-	go startLogCron()
+func startSenderCron(server *g.ReceiverStatusManager) {
+	go startProcCron(server)
+	go startLogCron(server)
 }
 
-func startProcCron() {
+func startProcCron(server *g.ReceiverStatusManager) {
+	server.Add(1)
+	defer server.Done()
 	for {
 		time.Sleep(DefaultProcCronPeriod)
 		refreshSendingCacheSize()
+		if server.IsStop() {
+			return
+		}
 	}
 }
 
-func startLogCron() {
+func startLogCron(server *g.ReceiverStatusManager) {
+	server.Add(1)
+	defer server.Done()
 	for {
 		time.Sleep(DefaultLogCronPeriod)
 		logConnPoolsProc()
+		if server.IsStop() {
+			return
+		}
 	}
 }
 

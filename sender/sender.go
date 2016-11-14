@@ -6,7 +6,7 @@ import (
 
 	pfc "github.com/baishancloud/goperfcounter"
 	"github.com/baishancloud/octopux-swtfr/g"
-	cpool "github.com/baishancloud/octopux-swtfr/sender/conn_pool"
+	cpool "github.com/baishancloud/octopux-swtfr/sender/connpool"
 	"github.com/influxdata/influxdb/client/v2"
 	cmodel "github.com/open-falcon/common/model"
 	nlist "github.com/toolkits/container/list"
@@ -33,13 +33,12 @@ var (
 )
 
 // 初始化数据发送服务, 在main函数中调用
-func Start() {
+func Start(server *g.ReceiverStatusManager) {
 	initConnPools()
 	initSendQueues()
-	initNodeRings()
 	// SendTasks依赖基础组件的初始化,要最后启动
-	startSendTasks()
-	startSenderCron()
+	startSendTasks(server)
+	startSenderCron(server)
 	log.Println("send.Start, ok")
 }
 

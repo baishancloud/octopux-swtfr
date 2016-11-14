@@ -17,7 +17,7 @@ const (
 )
 
 // TODO 添加对发送任务的控制,比如stop等
-func startSendTasks() {
+func startSendTasks(server *g.ReceiverStatusManager) {
 	cfg := g.Config()
 	// init semaphore
 	influxdbConcurrent := cfg.Influxdb.MaxIdle
@@ -30,25 +30,30 @@ func startSendTasks() {
 	if cfg.Influxdb != nil && cfg.Influxdb.Enabled {
 		for node, _ := range cfg.Influxdb.Cluster {
 			queue := InfluxdbQueues[node]
-			go forward2InfluxdbTask(queue, node, influxdbConcurrent)
+			go forward2InfluxdbTask(queue, node, influxdbConcurrent, server)
 		}
 	}
 
 }
 
 // Tsdb定时任务, 将 Tsdb发送缓存中的数据 通过api连接池 发送到Tsdb
-func forward2InfluxdbTask(Q *list.SafeListLimited, node string, concurrent int) {
+func forward2InfluxdbTask(Q *list.SafeListLimited, node string, concurrent int, server *g.ReceiverStatusManager) {
 
 	batch := g.Config().Influxdb.Batch // 一次发送,最多batch条数据
 	sema := nsema.NewSemaphore(concurrent)
 	addr := g.Config().Influxdb.Cluster[node]
 	retry := g.Config().Influxdb.MaxRetry
+	server.Add(1)
+	defer server.Done()
 
 	for {
 		items := Q.PopBackBy(batch)
 		count := len(items)
 		if count == 0 {
 			time.Sleep(DefaultSendTaskSleepInterval)
+			if server.IsStop() && Q.Len() == 0 {
+				return
+			}
 			continue
 		}
 		pts := make([]*client.Point, count)

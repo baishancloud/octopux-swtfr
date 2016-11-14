@@ -1,4 +1,4 @@
-package conn_pool
+package connpool
 
 import (
 	"fmt"

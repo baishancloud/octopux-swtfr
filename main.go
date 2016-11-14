@@ -3,11 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	_ "net/http/pprof"
 	"os"
+	"os/signal"
 	"runtime"
 	"runtime/pprof"
 	"strings"
+	"syscall"
 	"time"
 
 	_ "github.com/baishancloud/goperfcounter"
@@ -57,15 +60,49 @@ func main() {
 	// global config
 	g.ParseConfig(*cfg)
 
-	sender.Start()
-	receiver.Start()
+	rcv, err := receiver.New()
+	if err != nil {
+		log.Fatalln("Set receive serve error ", err)
+	}
+	rcv.GoServe()
 
-	//go func() {
-	//	nethttp.ListenAndServe(":6789", nil)
-	//}()
+	sender.Start(rcv.Rm)
 
-	// http
 	http.Start()
 
-	select {}
+	signals := make(chan os.Signal)
+	signal.Notify(signals, syscall.SIGHUP, syscall.SIGTERM)
+	for sig := range signals {
+		if sig == syscall.SIGTERM {
+			http.Stop()
+			rcv.Stop()
+			log.Println("exit SIGTERM", time.Now())
+			time.Sleep(30 * time.Second)
+			log.Println("exit SIGTERM end", time.Now())
+			os.Exit(0)
+			//TODO . timeout exit
+		} else if sig == syscall.SIGHUP {
+			http.Stop()
+			rcv.Stop()
+			log.Println("exit SIGHUP", time.Now())
+			os.Setenv("_GRACEFUL_RESTART", "true")
+			execSpec := &syscall.ProcAttr{
+				Env:   os.Environ(),
+				Files: []uintptr{os.Stdin.Fd(), os.Stdout.Fd(), os.Stderr.Fd()},
+			}
+			// Fork exec the new version of your server
+			fork, err := syscall.ForkExec(os.Args[0], os.Args, execSpec)
+			if err != nil {
+				log.Fatalln("Fail to fork", err)
+			}
+
+			log.Println("SIGHUP received: fork-exec to", fork)
+			// Wait for all conections to be finished
+			rcv.Rm.Wait()
+			log.Println(os.Getpid(), "Server gracefully shutdown")
+			log.Println("exit SIGHUP", time.Now())
+			// Stop the old server, all the connections have been closed and the new one is running
+			os.Exit(0)
+		}
+	}
 }
