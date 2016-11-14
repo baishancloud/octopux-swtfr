@@ -77,7 +77,7 @@ func main() {
 			http.Stop()
 			rcv.Stop()
 			log.Println("exit SIGTERM", time.Now())
-			time.Sleep(30 * time.Second)
+			rcv.Rm.Wait()
 			log.Println("exit SIGTERM end", time.Now())
 			os.Exit(0)
 			//TODO . timeout exit
