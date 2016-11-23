@@ -99,9 +99,7 @@ func main() {
 			log.Println("SIGHUP received: fork-exec to", fork)
 			// Wait for all conections to be finished
 			rcv.Rm.Wait()
-			log.Println(os.Getpid(), "Server gracefully shutdown")
-			log.Println("exit SIGHUP", time.Now())
-			// Stop the old server, all the connections have been closed and the new one is running
+			log.Println(os.Getpid(), "Server gracefully shutdown", time.Now())
 			os.Exit(0)
 		}
 	}
