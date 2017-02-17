@@ -18,9 +18,10 @@ import (
 // 0.1.7：删除 judge 和 graph 部分
 // 0.1.9: 添加 mallard pfc统计
 // 0.2.0: 添加优雅重启支持
+// 1.0.0: 修改打包方式
 
 const (
-	VERSION      = "0.2.0"
+	VERSION      = "1.0.0"
 	GAUGE        = "GAUGE"
 	COUNTER      = "COUNTER"
 	DERIVE       = "DERIVE"
